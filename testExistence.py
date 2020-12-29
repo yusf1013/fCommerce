@@ -27,13 +27,18 @@ def is_ecommerce(shit):
     condition = 0
 
     for item in test_list:
-        if " " + item + "" in shit.text:
+        if re.search(r'\b%s\b' % item, shit.text):
             print("---" + item + "---")
             # print(shit.text)
             condition += 1
-            # if condition == 1:
-            #     return 1
             break
+        # if " " + item + "" in shit.text:
+        #     print("---" + item + "---")
+        #     # print(shit.text)
+        #     condition += 1
+        #     # if condition == 1:
+        #     #     return 1
+        #     break
 
     return condition
 
@@ -52,11 +57,16 @@ def is_jobsite(shit):
     condition = 0
 
     for item in test_list:
-        if " " + item + "" in shit.text:
+        if re.search(r'\b%s\b' % item, shit.text):
             print("---" + item + "---")
             # print(shit.text)
             condition += 1
             break
+        # if " " + item + "" in shit.text:
+        #     print("---" + item + "---")
+        #     # print(shit.text)
+        #     condition += 1
+        #     break
 
     return condition
 
@@ -140,3 +150,4 @@ if __name__ == '__main__':
     # run_by_range(20, 22, False)
     # test numbers form list. No need to subtract 1
     run_from_list([1, 5, 7])
+

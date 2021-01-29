@@ -83,13 +83,13 @@ def getExistence(link):
             condition = is_ecommerce(shit)
             condition2 = is_jobsite(shit)
             total = max(total, condition)
-            if condition != 0:
-                print("Yaa Its a E-commerce Site.")
-                return 1
-
             if condition2 != 0:
                 print("Its a Job Site")
                 return 0
+
+            if condition != 0:
+                print("Yaa Its a E-commerce Site.")
+                return 1
 
         print("Its neither e-commerce nor job site")
     return 0
@@ -97,7 +97,7 @@ def getExistence(link):
 
 Set = set()
 s = 'Bangladesh'
-startGlobal =314 #  This number should be changed
+startGlobal =0 #  This number should be changed
 
 fortyK = open("yusuf2.txt", "r", encoding='utf-8')
 fortyKList = fortyK.readlines()
@@ -120,8 +120,8 @@ if __name__ == '__main__':
                     List = input.readlines()
                     start = startGlobal
                     end = len(List)
-                    if len(List) > startGlobal+1000:
-                        end =start+ 100
+                    if len(List) > start+1000:
+                        end = start + 1000
 
                     # end = len(List)>1000? startGlobal+1000: len(List)
                     List = List[start: end]
@@ -153,12 +153,12 @@ if __name__ == '__main__':
                         print(str(temp)+"."+oneLine)
                         link = oneLine
                         link = link.split("\n")[0]
-                        c = (getExistence(link))
+
+                        c = getExistence(link)
                         if c != 1:
                             continue
                         success_count += c
-                        total_count += 1
-                        print(success_count, "(Success)/ " + str(total_count) + "(Total)")
+                        print(success_count, "(Success)/ " + str(temp) + "(Total)")
                         phone_number = ""
                         lol = str(getPhoneNumber(link))
                         try:

@@ -84,20 +84,20 @@ def getExistence(link):
             condition2 = is_jobsite(shit)
             total = max(total, condition)
             if condition2 != 0:
-                print("Its a Job Site")
+                # print("Its a Job Site")
                 return 0
 
             if condition != 0:
-                print("Yaa Its a E-commerce Site.")
+                # print("Yaa Its a E-commerce Site.")
                 return 1
 
-        print("Its neither e-commerce nor job site")
+        # print("Its neither e-commerce nor job site")
     return 0
 
 
 Set = set()
 s = 'Bangladesh'
-startGlobal =0 #  This number should be changed
+startGlobal = 0 #  This number should be changed
 
 fortyK = open("yusuf2.txt", "r", encoding='utf-8')
 fortyKList = fortyK.readlines()
@@ -131,16 +131,16 @@ if __name__ == '__main__':
                         #####################################################
                         if oneLine.strip() in newButDiscoveredAlreadyList or oneLine in newButDiscoveredAlreadyList:
 
-                            print("contains in newButDiscoveredAlreadyList:"+str(oneLine)+"\n")
+                            # print("contains in newButDiscoveredAlreadyList:"+str(oneLine)+"\n")
                             continue
 
                         if oneLine in currentlyInventedLinkList or oneLine.strip() in currentlyInventedLinkList:
-                            print("contains in currentlyInventedLinkList:" + str(oneLine) + "\n")
+                            # print("contains in currentlyInventedLinkList:" + str(oneLine) + "\n")
                             continue
 
                         if oneLine.strip() in fortyKList or oneLine in fortyKList:
 
-                            print("yes contains in fortyKList:"+str(oneLine)+"\n")
+                            # print("yes contains in fortyKList:"+str(oneLine)+"\n")
                             continue
                         #####################################################
 
@@ -157,7 +157,7 @@ if __name__ == '__main__':
                         if c != 1:
                             continue
                         success_count += c
-                        print(success_count, "(Success)/ " + str(temp) + "(Total)")
+                        # print(success_count, "(Success)/ " + str(temp) + "(Total)")
                         phone_number = ""
                         lol = str(getPhoneNumber(link))
                         try:
@@ -191,9 +191,13 @@ if __name__ == '__main__':
                             f.flush()
                             os.fsync(f.fileno())
                             soup = bs4.BeautifulSoup(res.text, 'lxml')
-                            full_oc_crap = soup.find('div', attrs={'class': '_4-u3 _5sqi _5sqk'})
-                            likes = full_oc_crap.find('span', attrs={'class': '_52id _50f5 _50f7'})
-                            info['pageLikes'] = likes.text
+                            try:
+                                full_oc_crap = soup.find('div', attrs={'class': '_4-u3 _5sqi _5sqk'})
+                                likes = full_oc_crap.find('span', attrs={'class': '_52id _50f5 _50f7'})
+                                info['pageLikes'] = likes.text
+                            except AttributeError:
+                                likes=""
+
                             for link in soup.find_all('abbr',):
                                 output = link['title']
                                 x = output.split()

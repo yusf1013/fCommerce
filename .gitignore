@@ -38,6 +38,8 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+erf.py
+temp.py
 
 # Unit test / coverage reports
 htmlcov/

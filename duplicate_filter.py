@@ -34,6 +34,22 @@ def getPhoneNumber(link):
                     phone = shit.text
     return phone
 
+def get_cat_from_soup(soup):
+    for shit in soup.find_all('div', class_=True):
+        aaa = str(shit['class'])
+        try:
+            if aaa == "['clearfix', '_ikh']":
+                itemm = str(shit)
+                if 'LwDWwC1d0Rx' in itemm:
+                    print(shit.text)
+                    return shit.text
+        except AttributeError:
+            return ""
+
+
+    return ""
+
+
 def is_ecommerce(shit):
     """test_list = ['price', 'tk', 'taka', 'order', 'delivery', 'bkash', 'rocket', 'nagad', 'courier',
                  'প্রোডাক্ট', 'ডেলিভারি', 'অর্ডার', 'বিকাশ', 'দাম', 'টাকা']"""
@@ -67,7 +83,6 @@ def is_jobsite(shit):
             # print(shit.text)
             condition += 1
             break
-
     return condition
 
 
@@ -84,20 +99,20 @@ def getExistence(link):
             condition2 = is_jobsite(shit)
             total = max(total, condition)
             if condition2 != 0:
-                # print("Its a Job Site")
+                print("Its a Job Site")
                 return 0
 
             if condition != 0:
-                # print("Yaa Its a E-commerce Site.")
+                print("Yaa Its a E-commerce Site.")
                 return 1
 
-        # print("Its neither e-commerce nor job site")
+        print("Its neither e-commerce nor job site")
     return 0
 
 
 Set = set()
 s = 'Bangladesh'
-startGlobal =195 #  This number should be changed
+startGlobal =0 #  This number should be changed
 
 fortyK = open("yusuf2.txt", "r", encoding='utf-8')
 fortyKList = fortyK.readlines()
@@ -119,8 +134,8 @@ if __name__ == '__main__':
                     List = input.readlines()
                     start = startGlobal
                     end = len(List)
-                    if len(List) > start+10:
-                        end = start + 10
+                    if len(List) > start+1000:
+                        end = start + 1000
 
                     # end = len(List)>1000? startGlobal+1000: len(List)
                     List = List[start: end]
@@ -131,16 +146,16 @@ if __name__ == '__main__':
                         #####################################################
                         if oneLine.strip() in newButDiscoveredAlreadyList or oneLine in newButDiscoveredAlreadyList:
 
-                            # print("contains in newButDiscoveredAlreadyList:"+str(oneLine)+"\n")
+                            print("contains in newButDiscoveredAlreadyList:"+str(oneLine)+"\n")
                             continue
 
                         if oneLine in currentlyInventedLinkList or oneLine.strip() in currentlyInventedLinkList:
-                            # print("contains in currentlyInventedLinkList:" + str(oneLine) + "\n")
+                            print("contains in currentlyInventedLinkList:" + str(oneLine) + "\n")
                             continue
 
                         if oneLine.strip() in fortyKList or oneLine in fortyKList:
 
-                            # print("yes contains in fortyKList:"+str(oneLine)+"\n")
+                            print("yes contains in fortyKList:"+str(oneLine)+"\n")
                             continue
                         #####################################################
 
@@ -157,7 +172,7 @@ if __name__ == '__main__':
                         if c != 1:
                             continue
                         success_count += c
-                        # print(success_count, "(Success)/ " + str(temp) + "(Total)")
+                        print(success_count, "(Success)/ " + str(temp) + "(Total)")
                         phone_number = ""
                         lol = str(getPhoneNumber(link))
                         try:
@@ -172,12 +187,14 @@ if __name__ == '__main__':
                             'phone': phone_number,
                             'name': (str(oneLine.split('.com/')[1])).strip(),
                             'pageLikes': "",
+                            'category' : "",
                         }
 
                         res = requests.get(oneLine)
                         result = re.search(s, res.text)
                         if result:
                             soup = bs4.BeautifulSoup(res.text, "html.parser")
+                            info['category'] = get_cat_from_soup(soup)
                             for link in soup.find_all('a', href=True):
                                 a = str(link['href'])
                                 if "/?ref=py_c" in a:
@@ -194,11 +211,12 @@ if __name__ == '__main__':
                             try:
                                 full_oc_crap = soup.find('div', attrs={'class': '_4-u3 _5sqi _5sqk'})
                                 likes = full_oc_crap.find('span', attrs={'class': '_52id _50f5 _50f7'})
-                                temp = str(likes.text)
-                                temp=temp.replace(",","")
-                                info['pageLikes'] = temp
+                                temper = str(likes.text)
+                                temper=temper.replace(",", "")
+                                info['pageLikes'] = temper
                             except AttributeError:
                                 likes=""
+                                info['pageLikes'] = likes
 
                             for link in soup.find_all('abbr',):
                                 output = link['title']
@@ -219,14 +237,14 @@ if __name__ == '__main__':
                             stringList = []
                             List = list(dictionary.items())
                             List.sort(reverse=True)
-                            for i in range(5):
+                            for i in range(3):
                                 try:
                                     string = (List[i])[1]
                                     string = string.replace(",", "")
                                 except IndexError:
                                     string = ""
                                 stringList.append(string)
-                            csvText += info['name'] + ",\t" + info['link'] + ",\t" + info['phone'] + ",\t" + info['pageLikes'] + ",\t" + stringList[0] + ",\t" + stringList[1] + ",\t" + stringList[2]
+                            csvText += info['name'] + ",\t"+info['category'] + ",\t" + info['link'] + ",\t" + info['phone'] + ",\t" + info['pageLikes'] + ",\t" + stringList[0] + ",\t" + stringList[1] + ",\t" + stringList[2]
                             print(csvText)
                             csvFile.write(csvText+"\n")
                             csvFile.flush()

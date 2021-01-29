@@ -115,7 +115,6 @@ if __name__ == '__main__':
                 else:
                     csvFile.write("Page Name   \t,   Page Link    \t, Contact  \t, Page Likes  \t, Last Post  \t, 2nd Last Post  \t, 3rd Last Post   \t, 4th Last Post   \t,   5th Last Post   \n")
                 while True:
-
                     input = open("testlinks.txt", "r", encoding='utf-8')
                     List = input.readlines()
                     start = startGlobal

@@ -97,7 +97,7 @@ def getExistence(link):
 
 Set = set()
 s = 'Bangladesh'
-startGlobal =157 #  This number should be changed
+startGlobal =314 #  This number should be changed
 
 fortyK = open("yusuf2.txt", "r", encoding='utf-8')
 fortyKList = fortyK.readlines()
@@ -154,6 +154,8 @@ if __name__ == '__main__':
                         link = oneLine
                         link = link.split("\n")[0]
                         c = (getExistence(link))
+                        if c != 1:
+                            continue
                         success_count += c
                         total_count += 1
                         print(success_count, "(Success)/ " + str(total_count) + "(Total)")
@@ -193,13 +195,16 @@ if __name__ == '__main__':
                             full_oc_crap = soup.find('div', attrs={'class': '_4-u3 _5sqi _5sqk'})
                             likes = full_oc_crap.find('span', attrs={'class': '_52id _50f5 _50f7'})
                             info['pageLikes'] = likes.text
-                            for link in soup.find_all('abbr'):
+                            for link in soup.find_all('abbr',):
                                 output = link['title']
                                 x = output.split()
                                 x[0] = x[0].replace(",", "")
                                 month = months.index(x[2])
-                                value = int(x[3]) * 10000 + (month + 1) * 100 + int(x[1])
+                                hourMinute= x[len(x)-1]
+                                minute = str(hourMinute).split(":")[1]
+                                value = int(x[3]) * 3000 + (month + 1) * 100 + int(x[1])+int(minute)
                                 dictionary[value] = output
+
                             keyword=oneLine.split('.com/')[1]
                             for link in soup.find_all('a', href=True):
                                 a = str(link['href'])
@@ -216,7 +221,7 @@ if __name__ == '__main__':
                                 except IndexError:
                                     string = ""
                                 stringList.append(string)
-                            csvText += info['name'] + ",\t" + info['link'] + ",\t" + info['phone'] + ",\t" + info['pageLikes'] + ",\t" + stringList[0] + ",\t" + stringList[1] + ",\t" + stringList[2] + ",\t" + stringList[3] + ",\t" + stringList[4]
+                            csvText += info['name'] + ",\t" + info['link'] + ",\t" + info['phone'] + ",\t" + info['pageLikes'] + ",\t" + stringList[0] + ",\t" + stringList[1] + ",\t" + stringList[2]
                             print(csvText)
                             csvFile.write(csvText+"\n")
                             csvFile.flush()

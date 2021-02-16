@@ -9,7 +9,7 @@ from os import path
 import sys
 import time
 import datetime
-months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November','December']
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 
 def get_soup(current_link, s):
@@ -46,8 +46,6 @@ def get_cat_from_soup(soup):
                     return shit.text
         except AttributeError:
             return ""
-
-
     return ""
 
 
@@ -114,7 +112,7 @@ def is_jobsite(shit):
 
 Set = set()
 s = 'Bangladesh'
-startGlobal = 105
+startGlobal = 2143
 #  This number should be changed
 
 fortyK = open("yusuf2.txt", "r", encoding='utf-8')
@@ -167,13 +165,21 @@ if __name__ == '__main__':
                             newlyDiscoveredButNotAdded.flush()
                             os.fsync(newlyDiscoveredButNotAdded.fileno())
                             print(str(temp)+"."+oneLine)
-                            link = oneLine
-                            link = link.split("\n")[0]
-                            c = 0
-                            keyword = link.split('.com/')[1]
+                            # link = oneLine
+                            # link = link.split("\n")[0]
+                            # c = 0
+                            # keyword = link.split('.com/')[1]
+                            # postLink = "https://www.facebook.com/pg/" + keyword + "/posts/"
+                            #
+                            # res = requests.get(postLink)
+                            # SingleCallSoup = bs4.BeautifulSoup(res.text, 'lxml')
+                            oneLine = oneLine.split("\n")[0]
+                            keyword = oneLine.split('.com/')[1]
+                            # print("Key = " + str(keyword))
                             link = "https://www.facebook.com/pg/" + keyword + "/posts/"
-                            SingleCallSoup = get_soup(link, 'skip')
-                            time.sleep(3)
+                            res = requests.get(link)
+                            SingleCallSoup = bs4.BeautifulSoup(res.text, 'lxml')
+                            time.sleep(3.5)
                             if SingleCallSoup is not None:
                                 for shit in SingleCallSoup.find_all('div'):
                                     condition = is_ecommerce(shit)
@@ -209,9 +215,11 @@ if __name__ == '__main__':
                             }
                             res = requests.get(oneLine)
                             result = re.search(s, res.text)
+                            forCatSoup=bs4.BeautifulSoup(res.text, "lxml")
+                            # info['category'] = get_cat_from_soup(forCatSoup)
                             soup = bs4.BeautifulSoup(res.text, "html.parser")
                             info['category'] = get_cat_from_soup(soup)
-                            # time.sleep(1)
+
                             for link in soup.find_all('a', href=True):
                                 a = str(link['href'])
                                 if "/?ref=py_c" in a:
@@ -283,9 +291,13 @@ if __name__ == '__main__':
                                 csvFile.flush()
                                 os.fsync(csvFile.fileno())
                             else:
-                                print("Not found beautiful parser.For lack of info its not added in Result.txt.")
+                                print("Not found any post in beautiful parser.For lack of info its not added in Result.txt.")
+                                time.sleep(2)
                                 print(forThoseWhoAreEcommerceButNotShowingAnyPost)
-                                ecommerceButNotGotAnyPost.write(str(oneLine))
+                                sys.stdout.flush()
+                                ecommerceButNotGotAnyPost.write(str(oneLine)+"\n")
+                                ecommerceButNotGotAnyPost.flush()
+                                os.fsync(ecommerceButNotGotAnyPost.fileno())
                                 # print(str(soup))
 
                         print('testLinks ( '+str(start)+" - "+str(end)+' ) pora shes hoise')

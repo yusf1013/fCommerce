@@ -28,7 +28,7 @@ def get_soup(current_link, s):
 
 
 newFile = open("test3.txt", encoding="utf-8")
-outFile = open("link_likes.csv", "a", encoding="utf-16")
+outFile = open("link_likes.csv", "a", encoding="utf-8")
 newList = newFile.readlines()
 print("Total: ", len(newList))
 totalLinks = len(newList)
@@ -41,19 +41,26 @@ except:
     doneList = []
 
 print("Already done: ", len(doneList))
-f = open('done_link_likes.txt', 'a')
+f = open('done_link_likes.txt', 'a', encoding="utf-8")
 
 start = 0
 end = totalLinks
-if len(sys.argv) == 2:
-    a = int(sys.argv[0])
-    b = int(sys.argv[1])
+print(len(sys.argv))
+print(sys.argv)
+if len(sys.argv) == 3:
+    a = int(sys.argv[1])
+    b = int(sys.argv[2])
     start = totalLinks // b * (a - 1)
     end = totalLinks // b * a
     newList = newList[start:end]
 
+count = start
+print("start, end: ", start, end)
 
 for link in newList:
+    count += 1
+    print(count)
+
     done = link
     if done in doneList:
         continue

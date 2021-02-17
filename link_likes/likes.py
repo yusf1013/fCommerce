@@ -1,8 +1,14 @@
 import sys
-
+import re
 import requests
 import bs4
 import re
+
+
+def keep_num(str):
+    ans = re.sub("[^0-9]", "", str)
+    ans = ans.replace(".", "")
+    return ans
 
 
 def get_likes(soup):
@@ -10,14 +16,17 @@ def get_likes(soup):
     if f is not None:
         likes = f.find('span', attrs={'class': '_52id _50f5 _50f7'})  # finding span tag inside class
         # print(likes.text)
-        lik = likes.text.split(" „")[0]
-        lik = lik.replace(".", "")
+        # lik = likes.text.split(" „")[0]
+        # lik = lik.replace(".", "")
         # lik = lik[0:len(link)-1]
+        lik = likes.text
+        lik = keep_num(lik)
         return lik
     return ""
 
 
 def get_soup(current_link, s):
+    # print(current_link)
     res = requests.get(current_link)
     result = re.search(s, res.text)
 
@@ -33,15 +42,25 @@ newList = newFile.readlines()
 print("Total: ", len(newList))
 totalLinks = len(newList)
 
-try:
+doneFile = open("link_likes.csv", "r", encoding="utf-8")
+doneFileList = doneFile.readlines()
+doneFile.close()
+
+"""try:
     f = open('done_link_likes.txt', 'r')
     doneList = f.readlines()
     f.close()
 except:
-    doneList = []
+    doneList = []"""
+
+doneList = []
+for link in doneFileList:
+    doneList.append(link.split(",")[0])
+    # print(link.split(",")[0])
+
 
 print("Already done: ", len(doneList))
-f = open('done_link_likes.txt', 'a', encoding="utf-8")
+# f = open('done_link_likes.txt', 'a', encoding="utf-8")
 
 start = 0
 end = totalLinks
@@ -62,17 +81,20 @@ for link in newList:
     print(count)
 
     done = link
-    if done in doneList:
+    if link[0:len(link)-1] in doneList:
         continue
 
     link = link[0:len(link) - 1]
     res = link + ", "
     soup = get_soup(link, 'skip')
     likes = get_likes(soup)
-    res += likes + "\n"
-    print(res)
-    outFile.writelines(res)
-    outFile.flush()
-    doneList.append(done)
-    f.write(done)
-    f.flush()
+    if likes != "":
+        res += likes + "\n"
+        print(res)
+        outFile.writelines(res)
+        outFile.flush()
+        doneList.append(done)
+        # f.write(done)
+        # f.flush()
+    else:
+        print("failed: ", link)

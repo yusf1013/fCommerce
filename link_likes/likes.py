@@ -1,6 +1,9 @@
+import sys
+
 import requests
 import bs4
 import re
+
 
 def get_likes(soup):
     f = soup.find('div', attrs={'class': '_4-u3 _5sqi _5sqk'})
@@ -28,6 +31,7 @@ newFile = open("test3.txt", encoding="utf-8")
 outFile = open("link_likes.csv", "a", encoding="utf-16")
 newList = newFile.readlines()
 print("Total: ", len(newList))
+totalLinks = len(newList)
 
 try:
     f = open('done_link_likes.txt', 'r')
@@ -39,12 +43,22 @@ except:
 print("Already done: ", len(doneList))
 f = open('done_link_likes.txt', 'a')
 
+start = 0
+end = totalLinks
+if len(sys.argv) == 2:
+    a = int(sys.argv[0])
+    b = int(sys.argv[1])
+    start = totalLinks // b * (a - 1)
+    end = totalLinks // b * a
+    newList = newList[start:end]
+
+
 for link in newList:
     done = link
     if done in doneList:
         continue
 
-    link = link[0:len(link)-1]
+    link = link[0:len(link) - 1]
     res = link + ", "
     soup = get_soup(link, 'skip')
     likes = get_likes(soup)

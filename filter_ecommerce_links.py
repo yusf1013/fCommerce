@@ -81,7 +81,7 @@ def getExistence(link):
     return 0
 
 
-startGlobal = 1885
+startGlobal = 8455
 if __name__ == '__main__':
     with open("onlyEcommercePageLinks.txt", "a", 2, encoding="utf-8")as onlyEcommercePageLinks:
         Input = open("linksGotFromYusuf.txt", "r", encoding='utf-8')

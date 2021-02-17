@@ -40,7 +40,7 @@ def get_soup(current_link, s):
         return None
 
 
-newFile = open("../test3.txt", encoding="utf-8")
+newFile = open("/test3.txt", encoding="utf-8")
 outFile = open("link_cat_phone.csv", "a", encoding="utf-16")
 newList = newFile.readlines()
 print("Total: ", len(newList))

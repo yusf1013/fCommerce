@@ -1,5 +1,5 @@
 import sys
-import re
+import re, random
 import requests
 import bs4
 import re
@@ -39,6 +39,7 @@ def get_soup(current_link, s):
 newFile = open("test3.txt", encoding="utf-8")
 outFile = open("link_likes.csv", "a", encoding="utf-8")
 newList = newFile.readlines()
+newList = newList[9761:]
 print("Total: ", len(newList))
 totalLinks = len(newList)
 
@@ -72,13 +73,16 @@ if len(sys.argv) == 3:
     start = totalLinks // b * (a - 1)
     end = totalLinks // b * a
     newList = newList[start:end]
+else:
+    random.shuffle(newList)
+    # newList = newList[:5]
 
 count = start
 print("start, end: ", start, end)
 
 for link in newList:
     count += 1
-    print(count)
+    print(count, link)
 
     done = link
     if link[0:len(link)-1] in doneList:
